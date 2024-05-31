@@ -35,6 +35,9 @@ def get_Chat_response(text):
         response = check_balance()
     elif intent == "check_order_status":
         response = check_order_status()
+    elif intent == "check_product_availability":  # New intent
+        response = check_product_availability(text)
+
     else:
         response = generate_response(text)
     return response
@@ -52,6 +55,8 @@ def recognize_intent(text):
         return "check_balance"
     elif re.search(r'\border status\b|\bstatus\b', text, re.IGNORECASE):
         return "check_order_status"
+    elif re.search(r'\bhave\b', text, re.IGNORECASE):  # New condition for checking product availability
+        return "check_product_availability"
     else:
         return "chat"
 
@@ -75,6 +80,24 @@ def add_to_cart(text):
 def write_to_cart_file(product_details):
     with open('cart.txt', 'a') as file:
         file.write(product_details + '\n')
+
+def check_product_availability(text):
+    product_name = extract_product_name(text)
+    if product_name:
+        with open('products.txt', 'r') as file:
+            for line in file:
+                if product_name.lower() in line.lower():
+                    return line.strip()
+        return "No such product available"
+    else:
+        return "Could not extract product name from the query"
+
+def extract_product_name(text):
+    match = re.search(r'\bhave\b\s+(.*)$', text, re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+    else:
+        return None
 
 
 
