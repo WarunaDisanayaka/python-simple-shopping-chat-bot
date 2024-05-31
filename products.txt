@@ -1,0 +1,3 @@
+Product 1 : Egg 12$
+Product 2 : Chicken 23$
+Product 3 : Milk 24$
